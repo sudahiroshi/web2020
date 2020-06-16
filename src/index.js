@@ -4,14 +4,15 @@ var fs = require("fs");
 //create a server object:
 http
   .createServer(function(req, res) {
-    console.log("URL = " + req["url"]);
+    let url = req["url"];
+    if (url.match(/\/$/)) url += "index.html";
+    console.log("URL = " + url);
     try {
-      fs.statSync("." + req["url"]);
-      let text = fs.readFileSync("." + req["url"]);
+      fs.statSync("." + url);
+      let text = fs.readFileSync("." + url);
       res.write(text); //write a response to the client
     } catch (err) {
-      let pattern = /\/$/;
-      if (req["url"].match(pattern)) console.log("マッチ");
+      console.log("File is not found");
       res.writeHead(404, { "Content-Type": "text/plain" });
       res.write("404 Not Found");
     }
